@@ -21,5 +21,19 @@ public class TransactionEvent {
 	public String transactionId() {
 		return transaction.getId();
 	}
+	
+	public StackTraceElement[] getStartTrace() {
+		int length = transaction.getStartTrace().length;
+		StackTraceElement[] trace = new StackTraceElement[length];
+		System.arraycopy(transaction.getStartTrace(), 0, trace, 0, length);
+		return trace;
+	}
+	
+	public StackTraceElement[] getEndTrace() {
+		int length = transaction.getCompleteTrace().length;
+		StackTraceElement[] trace = new StackTraceElement[length];
+		System.arraycopy(transaction.getCompleteTrace(), 0, trace, 0, length);
+		return trace;
+	}
 
 }
