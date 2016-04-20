@@ -16,7 +16,6 @@ import java.sql.Savepoint;
 import java.sql.Statement;
 import java.sql.Struct;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.mars.quinn.jdbc.monitor.event.TransactionEvent;
-import com.mars.quinn.jdbc.monitor.event.TransactionListener;
 
 public class ConnectionMonitor implements Connection {
 
@@ -843,31 +841,19 @@ public class ConnectionMonitor implements Connection {
 		
 		public void publishBeginEvent() {
 			if (dataSource != null) {
-				Iterator<TransactionListener> it = dataSource.getTransactionListeners();
-				while (it.hasNext()) {
-					TransactionListener listener = (TransactionListener) it.next();
-					listener.onBegin(new TransactionEvent(this));
-				}
+				dataSource.getListenerStream().forEach(t -> t.onBegin(new TransactionEvent(this)));
 			}
 		}
 		
 		public void publishCommitEvent() {
 			if (dataSource != null) {
-				Iterator<TransactionListener> it = dataSource.getTransactionListeners();
-				while (it.hasNext()) {
-					TransactionListener listener = (TransactionListener) it.next();
-					listener.onCommit(new TransactionEvent(this));
-				}
+				dataSource.getListenerStream().forEach(t -> t.onCommit(new TransactionEvent(this)));
 			}
 		}
 		
 		public void publishRollbackEvent() {
 			if (dataSource != null) {
-				Iterator<TransactionListener> it = dataSource.getTransactionListeners();
-				while (it.hasNext()) {
-					TransactionListener listener = (TransactionListener) it.next();
-					listener.onRollback(new TransactionEvent(this));
-				}
+				dataSource.getListenerStream().forEach(t -> t.onRollback(new TransactionEvent(this)));
 			}
 		}
 	}

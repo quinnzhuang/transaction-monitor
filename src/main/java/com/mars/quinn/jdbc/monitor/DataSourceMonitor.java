@@ -4,12 +4,12 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import javax.sql.DataSource;
 
@@ -38,8 +38,8 @@ public class DataSourceMonitor implements DataSource {
 	/**
 	 * @return the transactionListeners
 	 */
-	public Iterator<TransactionListener> getTransactionListeners() {
-		return transactionListeners.iterator();
+	Stream<TransactionListener> getListenerStream() {
+		return transactionListeners.parallelStream();
 	}
 
 	@Override
